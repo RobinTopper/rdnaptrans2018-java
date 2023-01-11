@@ -3,6 +3,7 @@ package io.github.rdnaptrans2018.transformation;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.AMERSFOORT_K;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.AMERSFOORT_LAMBDA0;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.AMERSFOORT_X0;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.AMERSFOORT_X0_BIGD;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.AMERSFOORT_Y0;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.BESSEL1841_A;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.BESSEL1841_EPSILON;
@@ -15,15 +16,23 @@ import static io.github.rdnaptrans2018.transformation.TransformationConstants.E_
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.GRS80_A;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.GRS80_EPSILON;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.LAMBDA0_C;
-import static io.github.rdnaptrans2018.transformation.TransformationConstants.LAMBDA_MAX;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.LAMBDA0_C_BIGD;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.LAMBDA_MAX_BIGD;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.LAMBDA_MIN;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.LAMBDA_MIN_BIGD;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.M;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.N;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.NLAMBDA;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.NLGEO2018_GRID;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.PHI0_C;
-import static io.github.rdnaptrans2018.transformation.TransformationConstants.PHI_MAX;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.PHI0_C_NEGATIVE_BIGD;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.PHIO_C_BIGD;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.PHI_MAX_BIGD;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.PHI_MIN;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.PHI_MIN_BIGD;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.PI_DIVIDED_BY_2;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.PI_DIVIDED_BY_2_NEGATIVE;
+import static io.github.rdnaptrans2018.transformation.TransformationConstants.PI_MINUS_LAMBDA0_C_BIGD;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.R11;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.R11_INV;
 import static io.github.rdnaptrans2018.transformation.TransformationConstants.R12;
@@ -69,6 +78,7 @@ import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.tan;
 import static java.math.BigDecimal.ZERO;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.locationtech.jts.geom.Coordinate;
@@ -113,9 +123,9 @@ public class Transformer {
           && BigDecimal.valueOf(Z2geo)
               .setScale(11, RoundingMode.HALF_EVEN)
               .compareTo(ZERO) >= 0) {
-        phi1 = PI / 2.;
+        phi1 = PI_DIVIDED_BY_2;
       } else {
-        phi1 = -1 * PI / 2.;
+        phi1 = PI_DIVIDED_BY_2_NEGATIVE;
       }
     } while (abs(phi1 - phi) > BESSEL1841_EPSILON);
 
@@ -130,14 +140,14 @@ public class Transformer {
       lambda = atan(Y2geo / X2geo) - PI;
     } else if (BigDecimal.valueOf(X2geo)
         .compareTo(ZERO) == 0 && Y2geo > 0.) {
-      lambda = PI / 2.;
+      lambda = PI_DIVIDED_BY_2;
     } else if (BigDecimal.valueOf(X2geo)
         .compareTo(ZERO) == 0 && Y2geo < 0.) {
-      lambda = -1. * PI / 2.;
+      lambda = PI_DIVIDED_BY_2_NEGATIVE;
     } else if (BigDecimal.valueOf(X2geo)
         .compareTo(ZERO) == 0
         && BigDecimal.valueOf(Y2geo)
-            .compareTo(ZERO) == 0) {
+        .compareTo(ZERO) == 0) {
       lambda = 0.;
     }
 
@@ -165,13 +175,13 @@ public class Transformer {
       var lambdanorm = (lambda - LAMBDA_MIN) / DELTA_LAMBDA;
 
       if (BigDecimal.valueOf(phi)
-          .compareTo(BigDecimal.valueOf(PHI_MIN)) >= 0
+          .compareTo(PHI_MIN_BIGD) >= 0
           && BigDecimal.valueOf(phi)
-              .compareTo(BigDecimal.valueOf(PHI_MAX)) <= 0
+              .compareTo(PHI_MAX_BIGD) <= 0
           && BigDecimal.valueOf(lambda)
-              .compareTo(BigDecimal.valueOf(LAMBDA_MIN)) >= 0
+              .compareTo(LAMBDA_MIN_BIGD) >= 0
           && BigDecimal.valueOf(lambda)
-              .compareTo(BigDecimal.valueOf(LAMBDA_MAX)) <= 0) {
+              .compareTo(LAMBDA_MAX_BIGD) <= 0) {
 
         insideBoundsCorrectionGrid = true;
 
@@ -208,7 +218,7 @@ public class Transformer {
           RDcorrLat = (phinorm - floor(phinorm))
               * ((nw_phi * (floor(lambdanorm) + 1. - lambdanorm)) + ne_phi * (lambdanorm - floor(lambdanorm)))
               + (floor(phinorm) + 1. - phinorm)
-                  * ((sw_phi * (floor(lambdanorm) + 1. - lambdanorm)) + se_phi * (lambdanorm - floor(lambdanorm)));
+              * ((sw_phi * (floor(lambdanorm) + 1. - lambdanorm)) + se_phi * (lambdanorm - floor(lambdanorm)));
         }
         phi1 = phi0 - RDcorrLat;
         if (abs(phi1 - phi) < RD_EPSILON) {
@@ -222,7 +232,7 @@ public class Transformer {
           RDcorrLon = (phinorm - floor(phinorm))
               * ((nw_lambda * (floor(lambdanorm) + 1. - lambdanorm)) + ne_lambda * (lambdanorm - floor(lambdanorm)))
               + (floor(phinorm) + 1. - phinorm) * ((sw_lambda * (floor(lambdanorm) + 1. - lambdanorm))
-                  + se_lambda * (lambdanorm - floor(lambdanorm)));
+              + se_lambda * (lambdanorm - floor(lambdanorm)));
         }
         lambda1 = lambda0 - RDcorrLon;
         if (abs(lambda1 - lambda) < RD_EPSILON) {
@@ -239,9 +249,9 @@ public class Transformer {
     phi = phi * PI / 180.;
     lambda = lambda * PI / 180.;
 
-    var q = log(tan((phi + PI / 2.) / 2.)) - (E_B1841 / 2) * (log((1 + E_B1841 * sin(phi)) / (1 - E_B1841 * sin(phi))));
+    var q = log(tan((phi + PI_DIVIDED_BY_2) / 2.)) - (E_B1841 / 2) * (log((1 + E_B1841 * sin(phi)) / (1 - E_B1841 * sin(phi))));
     var w = N * q + M;
-    var phiC = 2. * atan(exp(w)) - PI / 2.;
+    var phiC = 2. * atan(exp(w)) - PI_DIVIDED_BY_2;
     var lambdaC = LAMBDA0_C + N * (lambda - AMERSFOORT_LAMBDA0);
 
     var sinPsi2 =
@@ -255,26 +265,27 @@ public class Transformer {
 
     double RD_x = Double.NaN, RD_y = Double.NaN;
 
-    if (BigDecimal.valueOf(phiC)
-        .compareTo(BigDecimal.valueOf(PHI0_C)) == 0
+    var phicBigDecimal = BigDecimal.valueOf(phiC);
+    if (phicBigDecimal
+        .compareTo(PHIO_C_BIGD) == 0
         && BigDecimal.valueOf(lambdaC)
-            .compareTo(BigDecimal.valueOf(LAMBDA0_C)) == 0) {
+            .compareTo(LAMBDA0_C_BIGD) == 0) {
       RD_x = AMERSFOORT_X0;
       RD_y = AMERSFOORT_Y0;
-    } else if ((BigDecimal.valueOf(phiC)
-        .compareTo(BigDecimal.valueOf(PHI0_C)) != 0
+    } else if ((phicBigDecimal
+        .compareTo(PHIO_C_BIGD) != 0
         || BigDecimal.valueOf(lambdaC)
-            .compareTo(BigDecimal.valueOf(LAMBDA0_C)) != 0)
-        && (BigDecimal.valueOf(phiC)
-            .compareTo(BigDecimal.valueOf(-1. * PHI0_C)) != 0
+            .compareTo(LAMBDA0_C_BIGD) != 0)
+        && (phicBigDecimal
+            .compareTo(PHI0_C_NEGATIVE_BIGD) != 0
             || BigDecimal.valueOf(lambdaC)
-                .compareTo(BigDecimal.valueOf(PI - LAMBDA0_C)) != 0)) {
+                .compareTo(PI_MINUS_LAMBDA0_C_BIGD) != 0)) {
       RD_x = rDistance * sinAlpha + AMERSFOORT_X0;
       RD_y = rDistance * cosAlpha + AMERSFOORT_Y0;
-    } else if (BigDecimal.valueOf(phiC)
-        .compareTo(BigDecimal.valueOf(-1. * PHI0_C)) == 0
+    } else if (phicBigDecimal
+        .compareTo(PHI0_C_NEGATIVE_BIGD) == 0
         && BigDecimal.valueOf(lambdaC)
-            .compareTo(BigDecimal.valueOf(LAMBDA0_C - PI)) == 0) {
+            .compareTo(TransformationConstants.LAMBDA0_C_MINUS_PI_BIGD) == 0) {
       RD_x = Double.NaN;
       RD_y = Double.NaN;
     }
@@ -290,13 +301,13 @@ public class Transformer {
     var RD_z = Double.NaN;
 
     if (BigDecimal.valueOf(phi)
-        .compareTo(BigDecimal.valueOf(PHI_MIN)) >= 0
+        .compareTo(PHI_MIN_BIGD) >= 0
         && BigDecimal.valueOf(phi)
-            .compareTo(BigDecimal.valueOf(PHI_MAX)) <= 0
+            .compareTo(PHI_MAX_BIGD) <= 0
         && BigDecimal.valueOf(lambda)
-            .compareTo(BigDecimal.valueOf(LAMBDA_MIN)) >= 0
+            .compareTo(LAMBDA_MIN_BIGD) >= 0
         && BigDecimal.valueOf(lambda)
-            .compareTo(BigDecimal.valueOf(LAMBDA_MAX)) <= 0) {
+            .compareTo(LAMBDA_MAX_BIGD) <= 0) {
 
       var i_nw = (int) round(ceil(phinorm) * NLAMBDA + floor(lambdanorm));
       var i_ne = (int) round(ceil(phinorm) * NLAMBDA + ceil(lambdanorm));
@@ -348,38 +359,44 @@ public class Transformer {
 
     if (xNorm > 0.) {
       lambdaC = LAMBDA0_C + atan(yNorm / xNorm);
-    } else if (xNorm < 0. && BigDecimal.valueOf(x)
-        .compareTo(BigDecimal.valueOf(AMERSFOORT_X0)) >= 0) {
-      lambdaC = LAMBDA0_C + atan(yNorm / xNorm) + PI;
-    } else if (xNorm < 0. && x < AMERSFOORT_X0) {
-      lambdaC = LAMBDA0_C + atan(yNorm / xNorm) - PI;
-    } else if (BigDecimal.valueOf(xNorm)
-        .compareTo(ZERO) == 0 && x > AMERSFOORT_X0) {
-      lambdaC = LAMBDA0_C + atan(yNorm / xNorm) + PI / 2;
-    } else if (BigDecimal.valueOf(xNorm)
-        .compareTo(ZERO) == 0 && x < AMERSFOORT_X0) {
-      lambdaC = LAMBDA0_C + atan(yNorm / xNorm) - PI / 2;
-    } else if (BigDecimal.valueOf(xNorm)
-        .compareTo(ZERO) == 0
-        && BigDecimal.valueOf(x)
-            .compareTo(BigDecimal.valueOf(AMERSFOORT_X0)) == 0) {
-      lambdaC = LAMBDA0_C;
     } else {
-      throw new IllegalStateException("Unknown combination of xNorm and x (Section 3.1.1)");
+      var bigDecimalOfX = BigDecimal.valueOf(x);
+      if (xNorm < 0. && bigDecimalOfX
+          .compareTo(AMERSFOORT_X0_BIGD) >= 0) {
+        lambdaC = LAMBDA0_C + atan(yNorm / xNorm) + PI;
+      } else if (xNorm < 0. && x < AMERSFOORT_X0) {
+        lambdaC = LAMBDA0_C + atan(yNorm / xNorm) - PI;
+      } else {
+        var bigDecimalOfxNorm = BigDecimal.valueOf(xNorm);
+        if (bigDecimalOfxNorm
+            .compareTo(ZERO) == 0 && x > AMERSFOORT_X0) {
+          lambdaC = LAMBDA0_C + atan(yNorm / xNorm) + PI / 2;
+        } else if (bigDecimalOfxNorm
+            .compareTo(ZERO) == 0 && x < AMERSFOORT_X0) {
+          lambdaC = LAMBDA0_C + atan(yNorm / xNorm) - PI / 2;
+        } else if (bigDecimalOfxNorm
+            .compareTo(ZERO) == 0
+            && bigDecimalOfX
+                .compareTo(AMERSFOORT_X0_BIGD) == 0) {
+          lambdaC = LAMBDA0_C;
+        } else {
+          throw new IllegalStateException("Unknown combination of xNorm and x (Section 3.1.1)");
+        }
+      }
     }
 
     // Section 3.1.2
 
-    var w = log(tan((phiC + PI / 2.) / 2.));
+    var w = log(tan((phiC + PI_DIVIDED_BY_2) / 2.));
     var q = (w - M) / N;
 
     var phi = phiC;
     var phi1 = phiC;
     do {
       phi = phi1;
-      if (phiC > -1. * PI / 2. && phiC < PI / 2.) {
+      if (phiC > PI_DIVIDED_BY_2_NEGATIVE && phiC < PI_DIVIDED_BY_2) {
         phi1 =
-            2. * atan(exp(q + (E_B1841 / 2.) * log((1. + E_B1841 * sin(phi)) / (1. - E_B1841 * sin(phi))))) - PI / 2.;
+            2. * atan(exp(q + (E_B1841 / 2.) * log((1. + E_B1841 * sin(phi)) / (1. - E_B1841 * sin(phi))))) - PI_DIVIDED_BY_2;
       } else {
         phi1 = phiC;
       }
@@ -403,14 +420,15 @@ public class Transformer {
     var phinorm = (phi - PHI_MIN) / DELTA_PHI;
     var lambdanorm = (lambda - LAMBDA_MIN) / DELTA_LAMBDA;
 
-    if (BigDecimal.valueOf(phi)
-        .compareTo(BigDecimal.valueOf(PHI_MIN)) >= 0
-        && BigDecimal.valueOf(phi)
-            .compareTo(BigDecimal.valueOf(PHI_MAX)) <= 0
+    var bigDecimalPhi = BigDecimal.valueOf(phi);
+    if (bigDecimalPhi
+        .compareTo(PHI_MIN_BIGD) >= 0
+        && bigDecimalPhi
+            .compareTo(PHI_MAX_BIGD) <= 0
         && BigDecimal.valueOf(lambda)
-            .compareTo(BigDecimal.valueOf(LAMBDA_MIN)) >= 0
+            .compareTo(LAMBDA_MIN_BIGD) >= 0
         && BigDecimal.valueOf(lambda)
-            .compareTo(BigDecimal.valueOf(LAMBDA_MAX)) <= 0) {
+            .compareTo(LAMBDA_MAX_BIGD) <= 0) {
       inside_bounds_correction_grid = true;
 
       var i_nw = (int) round(ceil(phinorm) * NLAMBDA + floor(lambdanorm));
@@ -484,9 +502,9 @@ public class Transformer {
               .compareTo(BigDecimal.ZERO) == 0
           && new BigDecimal(Z2geo).setScale(11, RoundingMode.HALF_EVEN)
               .compareTo(BigDecimal.ZERO) >= 0) {
-        phi1 = PI / 2.;
+        phi1 = PI_DIVIDED_BY_2;
       } else {
-        phi1 = -1. * PI / 2.;
+        phi1 = PI_DIVIDED_BY_2_NEGATIVE;
       }
     } while (abs(phi1 - phi) > GRS80_EPSILON);
 
@@ -501,10 +519,10 @@ public class Transformer {
       lambda = atan(Y2geo / X2geo) - PI;
     } else if (BigDecimal.valueOf(X2geo)
         .compareTo(ZERO) == 0 && Y2geo > 0) {
-      lambda = PI / 2.;
+      lambda = PI_DIVIDED_BY_2;
     } else if (BigDecimal.valueOf(X2geo)
         .compareTo(ZERO) == 0 && Y2geo < 0) {
-      lambda = -1. * PI / 2.;
+      lambda = PI_DIVIDED_BY_2_NEGATIVE;
     } else if (BigDecimal.valueOf(X2geo)
         .compareTo(ZERO) == 0
         && BigDecimal.valueOf(Y2geo)
@@ -526,13 +544,13 @@ public class Transformer {
     var ETRS89_h = Double.NaN;
 
     if (BigDecimal.valueOf(phi)
-        .compareTo(BigDecimal.valueOf(PHI_MIN)) >= 0
+        .compareTo(PHI_MIN_BIGD) >= 0
         && BigDecimal.valueOf(phi)
-            .compareTo(BigDecimal.valueOf(PHI_MAX)) <= 0
+            .compareTo(PHI_MAX_BIGD) <= 0
         && BigDecimal.valueOf(lambda)
-            .compareTo(BigDecimal.valueOf(LAMBDA_MIN)) >= 0
+            .compareTo(LAMBDA_MIN_BIGD) >= 0
         && BigDecimal.valueOf(lambda)
-            .compareTo(BigDecimal.valueOf(LAMBDA_MAX)) <= 0) {
+            .compareTo(LAMBDA_MAX_BIGD) <= 0) {
 
       var i_nw = (int) round(ceil(phinorm) * NLAMBDA + floor(lambdanorm));
       var i_ne = (int) round(ceil(phinorm) * NLAMBDA + ceil(lambdanorm));
