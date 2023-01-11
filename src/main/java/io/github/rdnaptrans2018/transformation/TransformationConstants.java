@@ -8,14 +8,17 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.tan;
+
 import io.github.rdnaptrans2018.transformation.grid.NLGEO2018;
 import io.github.rdnaptrans2018.transformation.grid.RDCORR2018;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.core.io.ClassPathResource;
 
 public final class TransformationConstants {
+
 
   private TransformationConstants() {};
 
@@ -46,9 +49,13 @@ public final class TransformationConstants {
   public static final double BESSEL1841_EPSILON = 2e-11;
 
   public static final double PHI_MIN = 50;
+
   public static final double PHI_MAX = 56;
+
   public static final double LAMBDA_MIN = 2;
+
   public static final double LAMBDA_MAX = 8;
+
   public static final double DELTA_PHI = 0.0125;
   public static final double DELTA_LAMBDA = 0.02;
 
@@ -109,6 +116,18 @@ public final class TransformationConstants {
   public static final double R32_INV = -1. * cos(BETA_INV) * sin(ALPHA_INV);
   public static final double R33_INV = cos(BETA_INV) * cos(ALPHA_INV);
 
+  public static final BigDecimal PHI_MIN_BIGD = BigDecimal.valueOf(PHI_MIN);
+  public static final BigDecimal PHI_MAX_BIGD = BigDecimal.valueOf(PHI_MAX);
+  public static final BigDecimal LAMBDA_MIN_BIGD = BigDecimal.valueOf(LAMBDA_MIN);
+  public static final BigDecimal LAMBDA_MAX_BIGD = BigDecimal.valueOf(LAMBDA_MAX);
+  public static final BigDecimal PHIO_C_BIGD = BigDecimal.valueOf(PHI0_C);
+  public static final BigDecimal LAMBDA0_C_BIGD = BigDecimal.valueOf(LAMBDA0_C);
+  public static final BigDecimal PI_MINUS_LAMBDA0_C_BIGD = BigDecimal.valueOf(PI - LAMBDA0_C);
+  public static final BigDecimal LAMBDA0_C_MINUS_PI_BIGD = BigDecimal.valueOf(LAMBDA0_C - PI);
+  public static final BigDecimal AMERSFOORT_X0_BIGD = BigDecimal.valueOf(AMERSFOORT_X0);
+  public static final BigDecimal PHI0_C_NEGATIVE_BIGD = BigDecimal.valueOf(-1. * PHI0_C);
+  public static final double PI_DIVIDED_BY_2_NEGATIVE = -1 * PI / 2.;
+  public static final double PI_DIVIDED_BY_2 = PI / 2.;
 
   // Grid files: NLGEO2018 = ETRS89 quasi-geoid height; RDCORR2018 = RD Bessel Correction
   public static final List<NLGEO2018> NLGEO2018_GRID;
