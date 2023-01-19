@@ -496,11 +496,11 @@ public class Transformer {
       RN = GRS80_A / sqrt(1. - (E_SQUARE_GRS80 * pow(sin(phi), 2)));
       if (X2geo > 0.) {
         phi1 = atan((Z2geo + E_SQUARE_GRS80 * RN * sin(phi)) / sqrt(pow(X2geo, 2) + pow(Y2geo, 2)));
-      } else if (new BigDecimal(X2geo).setScale(11, RoundingMode.HALF_EVEN)
+      } else if (BigDecimal.valueOf(X2geo).setScale(11, RoundingMode.HALF_EVEN)
           .compareTo(BigDecimal.ZERO) == 0
-          && new BigDecimal(Y2geo).setScale(11, RoundingMode.HALF_EVEN)
+          && BigDecimal.valueOf(Y2geo).setScale(11, RoundingMode.HALF_EVEN)
               .compareTo(BigDecimal.ZERO) == 0
-          && new BigDecimal(Z2geo).setScale(11, RoundingMode.HALF_EVEN)
+          && BigDecimal.valueOf(Z2geo).setScale(11, RoundingMode.HALF_EVEN)
               .compareTo(BigDecimal.ZERO) >= 0) {
         phi1 = PI_DIVIDED_BY_2;
       } else {
