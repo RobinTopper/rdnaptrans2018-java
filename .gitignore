@@ -153,5 +153,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse,maven,windows,linux
 
-*.txt
+*_RESULTS.txt
 *.vscode/
