@@ -41,6 +41,7 @@ public class ProblemHandler implements ProblemHandling {
     return getProblem(Status.INTERNAL_SERVER_ERROR, request, INTERNAL_SERVER_ERROR_MESSAGE);
   }
 
+  @SuppressWarnings("null")
   private Mono<ResponseEntity<Problem>> getProblem(Status status, ServerWebExchange request, String detail) {
     var problem = Problem.builder()
         .withTitle(status.getReasonPhrase())
