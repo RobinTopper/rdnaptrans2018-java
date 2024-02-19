@@ -5,16 +5,16 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.2</version>
+		<version>2.7.18</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<groupId>io.github</groupId>
-	<artifactId>rdnaptrans2018-java</artifactId>
+	<artifactId>rdnaptrans2018</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>rdnaptrans2018-java</name>
+	<name>rdnaptrans2018</name>
 	<description>RDNAPTRANS2018 Java implementation</description>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<licenses>
 		<license>
@@ -32,43 +32,10 @@
 		<problem-spring-webflux.version>0.27.0</problem-spring-webflux.version>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.zalando</groupId>
-			<artifactId>problem-spring-webflux</artifactId>
-			<version>${problem-spring-webflux.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.locationtech.jts</groupId>
-			<artifactId>jts-core</artifactId>
-			<version>${jts.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.locationtech.jts.io</groupId>
-			<artifactId>jts-io-common</artifactId>
-			<version>${jts.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+	<modules>		
+		<module>lib</module>
+		<module>webapp</module>
+	</modules>
 
 	<build>
 		<plugins>

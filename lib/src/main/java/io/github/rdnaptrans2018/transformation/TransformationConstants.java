@@ -8,9 +8,12 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.tan;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import io.github.rdnaptrans2018.transformation.grid.NLGEO2018;
 import io.github.rdnaptrans2018.transformation.grid.RDCORR2018;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.core.io.ClassPathResource;
@@ -116,10 +119,10 @@ public final class TransformationConstants {
 
   static {
     try {
-      var nlgeoPath = new ClassPathResource("transformation/grid/nlgeo2018.txt").getFile()
-          .toPath();
+      var nlgeoPath = new ClassPathResource("transformation/grid/nlgeo2018.txt").getInputStream();
+      BufferedReader nlgeoreader = new BufferedReader(new InputStreamReader(nlgeoPath, "UTF8"));
 
-      NLGEO2018_GRID = Files.lines(nlgeoPath)
+      NLGEO2018_GRID = nlgeoreader.lines()
           .skip(1L)
           .map(line -> {
             var values = line.split("\\s+");
@@ -128,10 +131,10 @@ public final class TransformationConstants {
           })
           .collect(Collectors.toList());
 
-      var rdcorrPath = new ClassPathResource("transformation/grid/rdcorr2018.txt").getFile()
-          .toPath();
+      var rdcorrPath = new ClassPathResource("transformation/grid/rdcorr2018.txt").getInputStream();
+      BufferedReader rdcorrreader = new BufferedReader(new InputStreamReader(rdcorrPath, "UTF8"));
 
-      RDCORR2018_GRID = Files.lines(rdcorrPath)
+      RDCORR2018_GRID = rdcorrreader.lines()
           .skip(1L)
           .map(line -> {
             var values = line.split("\\s+");
